@@ -64,7 +64,6 @@ class AparaturController extends Controller
     public function update(Request $request, Aparatur $aparatur)
     {
         $validator = Validator::make($request->all(), [
-            'image' => 'mimes:png,jpg,jpeg|max:2000',
             'name'  => 'required',
             'role'  => 'required',
         ]);
