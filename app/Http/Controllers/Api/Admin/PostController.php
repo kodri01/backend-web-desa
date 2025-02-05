@@ -37,7 +37,7 @@ class PostController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/posts', $image->hashName());
+        $image->storeAs('posts', $image->hashName());
 
         $posts = Post::create([
             'image'        => $image->hashName(),
@@ -80,10 +80,10 @@ class PostController extends Controller
         }
 
         if ($request->file('image')) {
-            Storage::disk('local')->delete('public/posts' . basename($post->image));
+            Storage::disk('public')->delete('posts' . basename($post->image));
 
             $image = $request->file('image');
-            $image->storeAs('public/posts', $image->hashName());
+            $image->storeAs('posts', $image->hashName());
 
             $post->update([
                 'image'        => $image->hashName(),
@@ -112,7 +112,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        Storage::disk('local')->delete('public/posts' . basename($post->image));
+        Storage::disk('public')->delete('posts' . basename($post->image));
 
         if ($post->delete()) {
             return new PostResource(true, 'Data Post Berhasil Dihapus!', null);

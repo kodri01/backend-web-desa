@@ -40,7 +40,7 @@ class ProductController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/products', $image->hashName());
+        $image->storeAs('products', $image->hashName());
 
         $product = Product::create([
             'image'     => $image->hashName(),
@@ -88,10 +88,10 @@ class ProductController extends Controller
         }
 
         if ($request->file('image')) {
-            Storage::disk('local')->delete('public/products' . basename($product->image));
+            Storage::disk('public')->delete('products' . basename($product->image));
 
             $image = $request->file('image');
-            $image->storeAs('public/products', $image->hashName());
+            $image->storeAs('products', $image->hashName());
 
             $product->update([
                 'image' => $image->hashName(),
@@ -126,7 +126,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        Storage::disk('local')->delete('public/products', basename($product->image));
+        Storage::disk('public')->delete('products', basename($product->image));
 
         if ($product->delete()) {
             return new ProductResource(true, 'Data Product Berhasil Dihapus!', null);

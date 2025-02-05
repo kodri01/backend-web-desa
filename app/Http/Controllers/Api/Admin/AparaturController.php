@@ -74,10 +74,10 @@ class AparaturController extends Controller
         }
 
         if ($request->file('image')) {
-            Storage::disk('local')->delete('public/aparaturs' . basename($aparatur->image));
+            Storage::disk('local')->delete('aparaturs' . basename($aparatur->image));
 
             $image = $request->file('image');
-            $image->storeAs('public/aparaturs', $image->hashName());
+            $image->storeAs('aparaturs', $image->hashName());
 
             $aparatur->update([
                 'image' => $image->hashName(),
@@ -100,7 +100,7 @@ class AparaturController extends Controller
 
     public function destroy(Aparatur $aparatur)
     {
-        Storage::disk('local')->delete('public/aparaturs' . basename($aparatur->image));
+        Storage::disk('public')->delete('aparaturs' . basename($aparatur->image));
 
         if ($aparatur->delete()) {
             return new AparaturResource(true, 'Data Aparaturs Berhasil Dihapus!', null);

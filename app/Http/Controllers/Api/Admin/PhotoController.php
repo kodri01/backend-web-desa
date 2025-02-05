@@ -35,7 +35,7 @@ class PhotoController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/photos', $image->hashName());
+        $image->storeAs('photos', $image->hashName());
 
         $photo = Photo::create([
             'image' => $image->hashName(),
@@ -51,7 +51,7 @@ class PhotoController extends Controller
 
     public function destroy(Photo $photo)
     {
-        Storage::disk('local')->delete('public/photo' . basename($photo->image));
+        Storage::disk('public')->delete('photos' . basename($photo->image));
 
         if ($photo->delete()) {
             return new PhotoResource(true, 'Data Photo Berhasil Dihapus', null);

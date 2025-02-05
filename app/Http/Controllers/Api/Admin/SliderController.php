@@ -29,7 +29,7 @@ class SliderController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/sliders' . $image->hashName());
+        $image->storeAs('sliders' . $image->hashName());
 
         $slider = Slider::create([
             'image' => $image->hashName(),
@@ -45,7 +45,7 @@ class SliderController extends Controller
     public function destroy(Slider $slider)
     {
 
-        Storage::disk('local')->delete('public/sliders' . basename($slider->image));
+        Storage::disk('public')->delete('sliders' . basename($slider->image));
 
         if ($slider->delete()) {
             return new SliderResource(true, 'Data Slider Berhasil Dihapus!', null);
