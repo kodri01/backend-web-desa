@@ -29,7 +29,7 @@ class SliderController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('sliders' . $image->hashName());
+        $image->storeAs('sliders', $image->hashName());
 
         $slider = Slider::create([
             'image' => $image->hashName(),

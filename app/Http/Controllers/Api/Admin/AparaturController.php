@@ -35,7 +35,7 @@ class AparaturController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/aparaturs', $image->hashName());
+        $image->storeAs('aparaturs', $image->hashName());
 
         $aparatur = Aparatur::create([
             'image' => $image->hashName(),
@@ -74,7 +74,7 @@ class AparaturController extends Controller
         }
 
         if ($request->file('image')) {
-            Storage::disk('local')->delete('aparaturs' . basename($aparatur->image));
+            Storage::disk('public')->delete('aparaturs' . basename($aparatur->image));
 
             $image = $request->file('image');
             $image->storeAs('aparaturs', $image->hashName());
