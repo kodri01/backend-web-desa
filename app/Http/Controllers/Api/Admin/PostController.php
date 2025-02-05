@@ -6,21 +6,38 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
-            $posts = $posts->where('title', 'like', '%' . request()->search . '%');
-        })->where('user_id', auth()->guard('api')->user()->id)->latest()->paginate(5);
+        $modelrole = DB::table('model_has_roles')->where('model_id', auth()->guard('api')->user()->id)->first();
+        $role = Role::where('id', $modelrole->role_id)->first();
 
-        $posts->appends(['search' => request()->search]);
+        if ($role->name == 'admin') {
 
-        return new PostResource(true, 'List Data Post', $posts);
+            $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
+                $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(5);
+
+            $posts->appends(['search' => request()->search]);
+
+            return new PostResource(true, 'List Data Post', $posts);
+        } else {
+
+            $posts = Post::with('user', 'category')->when(request()->search, function ($posts) {
+                $posts = $posts->where('title', 'like', '%' . request()->search . '%');
+            })->where('user_id', auth()->guard('api')->user()->id)->latest()->paginate(5);
+
+            $posts->appends(['search' => request()->search]);
+
+            return new PostResource(true, 'List Data Post', $posts);
+        }
     }
 
     public function store(Request $request)
